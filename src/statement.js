@@ -33,8 +33,13 @@ function statement(invoice, plays) {
     minimumFractionDigits: 2
   }).format;
 
+  // 임시 변수를 질의 함수로 바꾸기
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
+    const play = playFor(perf);
     let thisAmount = amountFor(perf, play); // 추출한 함수를 이용
 
     // 포인트를 적립한다.
