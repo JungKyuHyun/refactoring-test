@@ -8,6 +8,7 @@ function statement(invoice, plays) {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
     result.amount = amountFor(result);
+    result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
 
@@ -37,6 +38,15 @@ function statement(invoice, plays) {
     }
     return result;
   }
+
+  function volumeCreditsFor(perf) {
+    let result = 0;
+    result += Math.max(perf.audience - 30, 30);
+    if ("comedy" === perf.play.type) {
+      result += Math.floor(perf.audience / 5);
+    }
+    return result;
+  }
 }
 
 function usd(aNumber) {
@@ -47,7 +57,7 @@ function usd(aNumber) {
   }).format(aNumber / 100);
 }
 
-function renderPlainText(data, plays) {
+function renderPlainText(data) {
   // 필요 없어진 인수 삭제
   let result = `청구 내역 (고객명: ${data.customer})\n`;
   for (let perf of data.performances) {
@@ -58,19 +68,10 @@ function renderPlainText(data, plays) {
   result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
   return result;
 
-  function volumeCreditsFor(perf) {
-    let result = 0;
-    result += Math.max(perf.audience - 30, 30);
-    if ("comedy" === perf.play.type) {
-      result += Math.floor(perf.audience / 5);
-    }
-    return result;
-  }
-
   function tatalVolumeCredits() {
     let result = 0;
     for (let perf of data.performances) {
-      result += volumeCreditsFor(perf);
+      result += perf.volumeCredits;
     }
     return result;
   }
