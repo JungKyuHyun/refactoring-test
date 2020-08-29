@@ -10,12 +10,16 @@
     "react-scripts": "3.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
+    "babel-jest": "^26.3.0",
+    "jest": "^26.4.2",
     "typescript": "3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "browserslist": [

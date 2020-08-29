@@ -13,6 +13,15 @@ function statement(invoice, plays) {
     return plays[aPerformance.playID];
   };
 
+  const volumeCreditsFor = (perf) => {
+    let volumeCredits = 0;
+    volumeCredits += Math.max(perf.audience - 30, 30);
+    if ("comedy" === playFor(perf).type) {
+      volumeCredits += Math.floor(perf.audience / 5);
+    }
+    return volumeCredits;
+  };
+
   // 함수 추출하기
   const amountFor = (aPerformance) => {
     // 값이 바뀌지 않는 변수는 매개변수로 전달
@@ -40,11 +49,7 @@ function statement(invoice, plays) {
 
   for (let perf of invoice.performances) {
     // 포인트를 적립한다.
-    volumeCredits += Math.max(perf.audience - 30, 0);
-    // 희극 관객 5명마다 추가 포인트를 제공한다.
-    if ("comedy" === playFor(perf).type) {
-      volumeCredits += Math.floor(perf.audience / 5);
-    }
+    volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
 
     // 청구 내역을 출력한다.
     result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${
