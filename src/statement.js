@@ -1,12 +1,16 @@
+function usd(aNumber) {
+  // 함수 이름 변경
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100); // 단위 변환 로직도 이 함수 안으로 이동
+}
+
 function statement(invoice, plays) {
   let totalAmount = 0;
   let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
-  const format = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format;
 
   // 임시 변수를 질의 함수로 바꾸기
   const playFor = (aPerformance) => {
@@ -52,7 +56,7 @@ function statement(invoice, plays) {
     volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
 
     // 청구 내역을 출력한다.
-    result += ` ${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${
+    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`; // thisAmout 변수를 인라인
     totalAmount += amountFor(perf); // thisAmout 변수를 인라인
