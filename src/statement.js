@@ -51,11 +51,11 @@ function statement(invoice, plays) {
   };
 
   const tatalVolumeCredits = () => {
-    let volumeCredits = 0;
+    let result = 0;
     for (let perf of invoice.performances) {
-      volumeCredits += volumeCreditsFor(perf);
+      result += volumeCreditsFor(perf);
     }
-    return volumeCredits;
+    return result;
   };
 
   for (let perf of invoice.performances) {
@@ -66,10 +66,8 @@ function statement(invoice, plays) {
     totalAmount += amountFor(perf); // thisAmout 변수를 인라인
   }
 
-  let volumeCredits = tatalVolumeCredits(); // 값 계산 로직을 함수로 추출
-
   result += ` 총액: ${totalAmount / 100}\n`;
-  result += ` 적립 포인트: ${volumeCredits}점\n`;
+  result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
   return result;
 }
 
