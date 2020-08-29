@@ -1,48 +1,18 @@
 function statement(invoice, plays) {
   const statementData = {};
   statementData.customer = invoice.customer;
-  statementData.performances = invoice.performances.map(enrichPerformance); // 공연 정보를 중간 데이터로 옮김
+  statementData.performances = invoice.performances.map(enrichPerformance);
   return renderPlainText(statementData, plays);
 
   function enrichPerformance(aPerformance) {
     const result = Object.assign({}, aPerformance);
     result.play = playFor(result);
+    result.amount = amountFor(result);
     return result;
   }
 
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
-  }
-}
-
-function usd(aNumber) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(aNumber / 100);
-}
-
-function renderPlainText(data, plays) {
-  // 필요 없어진 인수 삭제
-  let result = `청구 내역 (고객명: ${data.customer})\n`;
-  for (let perf of data.performances) {
-    result += ` ${perf.play.name}: ${usd(amountFor(perf))} (${
-      perf.audience
-    }석)\n`;
-  }
-
-  result += ` 총액: ${totalAmout() / 100}\n`;
-  result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
-  return result;
-
-  function volumeCreditsFor(perf) {
-    let result = 0;
-    result += Math.max(perf.audience - 30, 30);
-    if ("comedy" === perf.play.type) {
-      result += Math.floor(perf.audience / 5);
-    }
-    return result;
   }
 
   function amountFor(aPerformance) {
@@ -67,6 +37,35 @@ function renderPlainText(data, plays) {
     }
     return result;
   }
+}
+
+function usd(aNumber) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(aNumber / 100);
+}
+
+function renderPlainText(data, plays) {
+  // 필요 없어진 인수 삭제
+  let result = `청구 내역 (고객명: ${data.customer})\n`;
+  for (let perf of data.performances) {
+    result += ` ${perf.play.name}: ${usd(perf.amount)} (${perf.audience}석)\n`;
+  }
+
+  result += ` 총액: ${totalAmout() / 100}\n`;
+  result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
+  return result;
+
+  function volumeCreditsFor(perf) {
+    let result = 0;
+    result += Math.max(perf.audience - 30, 30);
+    if ("comedy" === perf.play.type) {
+      result += Math.floor(perf.audience / 5);
+    }
+    return result;
+  }
 
   function tatalVolumeCredits() {
     let result = 0;
@@ -79,7 +78,7 @@ function renderPlainText(data, plays) {
   function totalAmout() {
     let result = 0;
     for (let perf of data.performances) {
-      result += amountFor(perf);
+      result += perf.amount;
     }
     return result;
   }
