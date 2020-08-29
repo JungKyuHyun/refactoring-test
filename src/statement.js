@@ -1,5 +1,4 @@
 function usd(aNumber) {
-  // 함수 이름 변경
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -63,7 +62,6 @@ function statement(invoice, plays) {
   };
 
   for (let perf of invoice.performances) {
-    // 청구 내역을 출력한다.
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`;
