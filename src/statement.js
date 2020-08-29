@@ -4,14 +4,12 @@ function usd(aNumber) {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
-  }).format(aNumber / 100); // 단위 변환 로직도 이 함수 안으로 이동
+  }).format(aNumber / 100);
 }
 
 function statement(invoice, plays) {
-  let totalAmount = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
-  // 임시 변수를 질의 함수로 바꾸기
   const playFor = (aPerformance) => {
     return plays[aPerformance.playID];
   };
@@ -25,9 +23,7 @@ function statement(invoice, plays) {
     return result;
   };
 
-  // 함수 추출하기
   const amountFor = (aPerformance) => {
-    // 값이 바뀌지 않는 변수는 매개변수로 전달
     let result = 0;
 
     switch (playFor(aPerformance).type) {
@@ -47,7 +43,7 @@ function statement(invoice, plays) {
       default:
         throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
     }
-    return result; // 함수 안에서 값이 바뀌는 변수 반환
+    return result;
   };
 
   const tatalVolumeCredits = () => {
@@ -58,13 +54,23 @@ function statement(invoice, plays) {
     return result;
   };
 
+  // totalAmout가 가장 적절 하지만 이미 중복이 되니, 일단 아무 이름이나 쓴다
+  const appleSauce = () => {
+    let totalAmount = 0;
+    for (let perf of invoice.performances) {
+      totalAmount += amountFor(perf);
+    }
+    return totalAmount;
+  };
+
   for (let perf of invoice.performances) {
     // 청구 내역을 출력한다.
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
-    }석)\n`; // thisAmout 변수를 인라인
-    totalAmount += amountFor(perf); // thisAmout 변수를 인라인
+    }석)\n`;
   }
+
+  let totalAmount = appleSauce();
 
   result += ` 총액: ${totalAmount / 100}\n`;
   result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
