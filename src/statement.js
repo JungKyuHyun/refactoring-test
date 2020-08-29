@@ -1,3 +1,7 @@
+function statement(invoice, plays) {
+  return renderPlainText(invoice, plays);
+}
+
 function usd(aNumber) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -6,23 +10,32 @@ function usd(aNumber) {
   }).format(aNumber / 100);
 }
 
-function statement(invoice, plays) {
+function renderPlainText(invoice, plays) {
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
+  for (let perf of invoice.performances) {
+    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
+      perf.audience
+    }석)\n`;
+  }
 
-  const playFor = (aPerformance) => {
+  result += ` 총액: ${totalAmout() / 100}\n`;
+  result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
+  return result;
+
+  function playFor(aPerformance) {
     return plays[aPerformance.playID];
-  };
+  }
 
-  const volumeCreditsFor = (perf) => {
+  function volumeCreditsFor(perf) {
     let result = 0;
     result += Math.max(perf.audience - 30, 30);
     if ("comedy" === playFor(perf).type) {
       result += Math.floor(perf.audience / 5);
     }
     return result;
-  };
+  }
 
-  const amountFor = (aPerformance) => {
+  function amountFor(aPerformance) {
     let result = 0;
 
     switch (playFor(aPerformance).type) {
@@ -43,33 +56,23 @@ function statement(invoice, plays) {
         throw new Error(`알 수 없는 장르: ${playFor(aPerformance).type}`);
     }
     return result;
-  };
+  }
 
-  const tatalVolumeCredits = () => {
+  function tatalVolumeCredits() {
     let result = 0;
     for (let perf of invoice.performances) {
       result += volumeCreditsFor(perf);
     }
     return result;
-  };
+  }
 
-  const totalAmout = () => {
+  function totalAmout() {
     let result = 0;
     for (let perf of invoice.performances) {
       result += amountFor(perf);
     }
     return result;
-  };
-
-  for (let perf of invoice.performances) {
-    result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
-      perf.audience
-    }석)\n`;
   }
-
-  result += ` 총액: ${totalAmout() / 100}\n`;
-  result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
-  return result;
 }
 
 export { statement };
