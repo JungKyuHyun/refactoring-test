@@ -9,7 +9,6 @@ function usd(aNumber) {
 
 function statement(invoice, plays) {
   let totalAmount = 0;
-  let volumeCredits = 0;
   let result = `청구 내역 (고객명: ${invoice.customer})\n`;
 
   // 임시 변수를 질의 함수로 바꾸기
@@ -52,15 +51,19 @@ function statement(invoice, plays) {
   };
 
   for (let perf of invoice.performances) {
-    // 포인트를 적립한다.
-    volumeCredits += volumeCreditsFor(perf); // 추출한 함수를 이용해 값을 누적
-
     // 청구 내역을 출력한다.
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audience
     }석)\n`; // thisAmout 변수를 인라인
     totalAmount += amountFor(perf); // thisAmout 변수를 인라인
   }
+
+  let volumeCredits = 0; // 문장 슬라이드하기를 통해 변수 선언을 문장 반복문 바로 위로 옮김
+  // 값 누적 로직을 별도 for문으로 분리
+  for (let perf of invoice.performances) {
+    volumeCredits += volumeCreditsFor(perf);
+  }
+
   result += ` 총액: ${totalAmount / 100}\n`;
   result += ` 적립 포인트: ${volumeCredits}점\n`;
   return result;
