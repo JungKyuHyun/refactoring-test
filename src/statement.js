@@ -50,6 +50,14 @@ function statement(invoice, plays) {
     return result; // 함수 안에서 값이 바뀌는 변수 반환
   };
 
+  const tatalVolumeCredits = () => {
+    let volumeCredits = 0;
+    for (let perf of invoice.performances) {
+      volumeCredits += volumeCreditsFor(perf);
+    }
+    return volumeCredits;
+  };
+
   for (let perf of invoice.performances) {
     // 청구 내역을 출력한다.
     result += ` ${playFor(perf).name}: ${usd(amountFor(perf))} (${
@@ -58,11 +66,7 @@ function statement(invoice, plays) {
     totalAmount += amountFor(perf); // thisAmout 변수를 인라인
   }
 
-  let volumeCredits = 0; // 문장 슬라이드하기를 통해 변수 선언을 문장 반복문 바로 위로 옮김
-  // 값 누적 로직을 별도 for문으로 분리
-  for (let perf of invoice.performances) {
-    volumeCredits += volumeCreditsFor(perf);
-  }
+  let volumeCredits = tatalVolumeCredits(); // 값 계산 로직을 함수로 추출
 
   result += ` 총액: ${totalAmount / 100}\n`;
   result += ` 적립 포인트: ${volumeCredits}점\n`;
