@@ -54,13 +54,12 @@ function statement(invoice, plays) {
     return result;
   };
 
-  // totalAmout가 가장 적절 하지만 이미 중복이 되니, 일단 아무 이름이나 쓴다
-  const appleSauce = () => {
-    let totalAmount = 0;
+  const totalAmout = () => {
+    let result = 0;
     for (let perf of invoice.performances) {
-      totalAmount += amountFor(perf);
+      result += amountFor(perf);
     }
-    return totalAmount;
+    return result;
   };
 
   for (let perf of invoice.performances) {
@@ -70,9 +69,7 @@ function statement(invoice, plays) {
     }석)\n`;
   }
 
-  let totalAmount = appleSauce();
-
-  result += ` 총액: ${totalAmount / 100}\n`;
+  result += ` 총액: ${totalAmout() / 100}\n`;
   result += ` 적립 포인트: ${tatalVolumeCredits()}점\n`;
   return result;
 }
