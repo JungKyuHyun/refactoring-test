@@ -8,7 +8,7 @@ describe("statement() test", () => {
  As You Like It: $580.00 (35석)
  Othello: $500.00 (40석)
  총액: 173000
- 적립 포인트: 97점
+ 적립 포인트: 47점
 `;
 
   it("mock 데이터를 반환한다", () => {
