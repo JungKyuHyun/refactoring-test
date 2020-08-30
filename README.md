@@ -1,5 +1,15 @@
-![image](https://user-images.githubusercontent.com/42884032/91588899-d0287c80-e993-11ea-98c5-f37cea696b4f.png)
-
 # refactoring
 
-리펙토링 연습
+리펙토링 1장 예제 코드 학습
+
+## Commands
+
+```bash
+> yarn install && yarn start
+
+// If you want test, enter `yarn test`
+```
+
+## Preview
+
+![image](https://user-images.githubusercontent.com/42884032/91655467-abdfb380-eaeb-11ea-889e-32e5f5d18d02.png)
