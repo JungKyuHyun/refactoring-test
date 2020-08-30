@@ -15,21 +15,12 @@ export default function createStatementData(invoice, plays) {
     const result = Object.assign({}, aPerformance);
     result.play = calculator.play;
     result.amount = calculator.amount;
-    result.volumeCredits = volumeCreditsFor(result);
+    result.volumeCredits = calculator.volumeCredits;
     return result;
   }
 
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
-  }
-
-  function volumeCreditsFor(perf) {
-    let result = 0;
-    result += Math.max(perf.audience - 30, 30);
-    if ("comedy" === perf.play.type) {
-      result += Math.floor(perf.audience / 5);
-    }
-    return result;
   }
 
   function totalAmout(data) {
@@ -69,6 +60,15 @@ class PerformanceCalculator {
         break;
       default:
         throw new Error(`알 수 없는 장르: ${this.performance.play.type}`);
+    }
+    return result;
+  }
+
+  get volumeCredits() {
+    let result = 0;
+    result += Math.max(this.performance.audience - 30, 30);
+    if ("comedy" === this.play.type) {
+      result += Math.floor(this.performance.audience / 5);
     }
     return result;
   }
