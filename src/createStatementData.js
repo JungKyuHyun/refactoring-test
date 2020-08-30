@@ -8,8 +8,12 @@ export default function createStatementData(invoice, plays) {
   return statementData;
 
   function enrichPerformance(aPerformance) {
+    const calculator = new PerformanceCalculator(
+      aPerformance,
+      playFor(aPerformance)
+    );
     const result = Object.assign({}, aPerformance);
-    result.play = playFor(result);
+    result.play = calculator.play;
     result.amount = amountFor(result);
     result.volumeCredits = volumeCreditsFor(result);
     return result;
@@ -60,5 +64,13 @@ export default function createStatementData(invoice, plays) {
       (total, p) => (total += p.volumeCredits),
       0
     );
+  }
+}
+
+// 모든 데이터 변환을 한 곳에서 수행할 수 있어서 코드가 더욱 명확해진다.
+class PerformanceCalculator {
+  constructor(aPerformance, aPlay) {
+    this.performance = aPerformance;
+    this.play = aPlay;
   }
 }
