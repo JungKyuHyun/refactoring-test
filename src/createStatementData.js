@@ -8,7 +8,7 @@ export default function createStatementData(invoice, plays) {
   return statementData;
 
   function enrichPerformance(aPerformance) {
-    const calculator = new PerformanceCalculator(
+    const calculator = createPerformanceCalculator(
       aPerformance,
       playFor(aPerformance)
     );
@@ -33,6 +33,11 @@ export default function createStatementData(invoice, plays) {
       0
     );
   }
+}
+
+// 자바스크립트에서는 생성자가 서브클래스의 인스턴스를 반환할 수 없기 때문에, 생성자를 팩터리 함수로 바꾼다
+function createPerformanceCalculator(aPerformance, aPlay) {
+  return new PerformanceCalculator(aPerformance, aPlay);
 }
 
 // 모든 데이터 변환을 한 곳에서 수행할 수 있어서 코드가 더욱 명확해진다.
